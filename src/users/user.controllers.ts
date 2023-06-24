@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpStatus,
@@ -8,30 +7,23 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserDTO } from './user.dto';
+
+import { UserServices } from './user.services';
 
 @Controller('users')
 export class UserController {
+  constructor(private userServices: UserServices) {}
+
   @Get()
-  getAllUsers() {
-    return [
-      {
-        name: 'Hoan',
-        age: 18,
-      },
-      {
-        name: 'Hien',
-        age: 16,
-      },
-      {
-        name: 'Kim',
-        age: 12,
-      },
-    ];
+  async getAllUsers() {
+    console.log('here');
+    const result = await this.userServices.allPost();
+    console.log(result);
+    return result;
   }
 
   @Post()
-  createUser(@Body() user: UserDTO): UserDTO {
+  createUser() {
     return {
       username: 'Tran Quoc Hoan',
       password: `Hoan has create this user`,
@@ -45,7 +37,7 @@ export class UserController {
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: number,
-  ): UserDTO {
+  ) {
     console.log(id);
     return {
       username: 'Tran Quoc Hoan',
@@ -54,7 +46,7 @@ export class UserController {
   }
 
   @Get('?:id')
-  getUserByQueryID(@Query('id') id: number): UserDTO {
+  getUserByQueryID(@Query('id') id: number) {
     console.log(id);
     return {
       username: 'Tran Quoc Hoan',
